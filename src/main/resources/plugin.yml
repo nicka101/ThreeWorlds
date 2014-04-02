@@ -1,0 +1,11 @@
+name: ThreeWorlds
+version: 1.0.0
+description: ThreeWorlds PVP Experience
+author: nicka101
+load: startup
+website: "http://cloudbro.net"
+main: com.nicka101.ThreeWorlds.ThreeWorlds
+commands:
+    threeworlds:
+        description: ThreeWorlds Control Commands
+        usage: "Usage: /<command> <select|change|war|infringe>"
