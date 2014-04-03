@@ -1,6 +1,6 @@
 package com.nicka101.ThreeWorlds.Handlers;
 
-import com.nicka101.ThreeWorlds.PlayerManager;
+import com.nicka101.ThreeWorlds.ThreeWorlds;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -11,15 +11,18 @@ import org.bukkit.event.entity.EntityTargetEvent;
  */
 public class NetherHandler extends WorldHandler {
 
-    public NetherHandler(PlayerManager playerManager){
-        super(playerManager);
+    public NetherHandler(ThreeWorlds plugin){
+        super(plugin);
     }
 
     @Override
     public void processDamageEvent(EntityDamageEvent event){
         if(event.getCause() == EntityDamageEvent.DamageCause.FIRE
                 || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
-                || event.getCause() == EntityDamageEvent.DamageCause.LAVA)event.setCancelled(true);
+                || event.getCause() == EntityDamageEvent.DamageCause.LAVA){
+            event.getEntity().setFireTicks(0); //Extinguish it
+            event.setCancelled(true);
+        }
     }
 
     @Override

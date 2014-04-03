@@ -39,8 +39,32 @@ public class ThreeWorldsExecutor implements CommandExecutor {
                         break;
                     default:
                         player.sendMessage(ChatColor.RED + "/" + label + " select <overworld|nether|end>");
-                        break;
+                        return true;
                 }
+                player.sendMessage(ChatColor.GOLD + "Welcome to the winning team!");
+                return true;
+            } else if(args[0].equalsIgnoreCase("change")){
+                //TODO: Charge something to transfer allegiance
+                if(!plugin.getPlayerManager().IsPlayerInWorld(player)){
+                    player.sendMessage(ChatColor.RED + "You have not yet selected an allegiance, so it is impossible to change. Try: ");
+                    player.sendMessage(ChatColor.BLUE + "/" + label + " select " + args[1]);
+                    return true;
+                }
+                switch(args[1].toLowerCase()){
+                    case "overworld":
+                        plugin.getPlayerManager().ChangePlayerWorld(PlayerManager.WorldType.OVERWORLD, player);
+                        break;
+                    case "nether":
+                        plugin.getPlayerManager().ChangePlayerWorld(PlayerManager.WorldType.NETHER, player);
+                        break;
+                    case "end":
+                        plugin.getPlayerManager().ChangePlayerWorld(PlayerManager.WorldType.END, player);
+                        break;
+                    default:
+                        player.sendMessage(ChatColor.RED + "/" + label + " select <overworld|nether|end>");
+                        return true;
+                }
+                player.sendMessage(ChatColor.GOLD + "At least you selected the right team this time!");
                 return true;
             }
         }

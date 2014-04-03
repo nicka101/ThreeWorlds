@@ -1,5 +1,7 @@
 package com.nicka101.ThreeWorlds;
 
+import com.nicka101.ThreeWorlds.Generation.OrePopulator;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -7,7 +9,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.world.WorldInitEvent;
 
 /**
  * Created by Nicka101 on 01/04/2014.
@@ -16,6 +21,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class EventListener implements Listener {
 
     private final ThreeWorlds plugin;
+    private boolean netherInitComplete = false;
 
     protected EventListener(ThreeWorlds plugin){
         this.plugin = plugin;
@@ -55,9 +61,25 @@ public class EventListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerTeleport(PlayerTeleportEvent event){
-        if(event.getFrom().getWorld() == event.getTo().getWorld())return;
+    public void onWorldChange(PlayerChangedWorldEvent event){
         plugin.getPlayerManager().GetHandlerForPlayer(event.getPlayer())
                 .processWorldChange(event);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerLogin(PlayerJoinEvent event){
+        plugin.getPlayerManager().GetHandlerForPlayer(event.getPlayer())
+                .processLoginEvent(event);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onWorldLoad(WorldInitEvent event){
+        if(!netherInitComplete){
+            if(event.getWorld().getEnvironment() != World.Environment.NETHER)return;
+            World nether = event.getWorld();
+                nether.getPopulators().add(new OrePopulator(plugin, PlayerManager.WorldType.NETHER));
+            plugin.log("Added Ore BlockPopulator to nether chunks!");
+            netherInitComplete = true;
+        }
     }
 }

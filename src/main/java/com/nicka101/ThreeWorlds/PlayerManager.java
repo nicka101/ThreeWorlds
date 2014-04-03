@@ -35,12 +35,13 @@ public class PlayerManager {
     }
 
     private void InitHandlers(){
-        handlers.put(WorldType.OVERWORLD, new OverworldHandler(this));
-        handlers.put(WorldType.NETHER, new NetherHandler(this));
-        handlers.put(WorldType.END, new EndHandler(this));
+        handlers.put(WorldType.OVERWORLD, new OverworldHandler(plugin));
+        handlers.put(WorldType.NETHER, new NetherHandler(plugin));
+        handlers.put(WorldType.END, new EndHandler(plugin));
     }
 
     public void AddPlayerToWorld(WorldType world, Player player){
+        player.setMaxHealth(plugin.getConfig().getDouble("options." + world.toString().toLowerCase() + ".health", 20));
         playerMap.get(world).add(player.getUniqueId());
     }
 
@@ -81,7 +82,7 @@ public class PlayerManager {
         WorldType w = GetPlayerWorld(player);
         if(w == null){
             if(unassignedPlayerHandler == null){
-                unassignedPlayerHandler = new WorldHandler(this);
+                unassignedPlayerHandler = new WorldHandler(plugin);
             }
             return unassignedPlayerHandler;
         }
@@ -91,7 +92,7 @@ public class PlayerManager {
     private void loadPlayerMap(){
         FileConfiguration config = plugin.getConfig();
         for(WorldType w : WorldType.values()){
-            List<String> players = config.getStringList(w.toString().toLowerCase());
+            List<String> players = config.getStringList("players." + w.toString().toLowerCase());
             HashSet<UUID> worldPlayerMap = playerMap.get(w);
             for(String playerUUID : players){
                 try {
@@ -111,12 +112,12 @@ public class PlayerManager {
             for(UUID uuid : playerUUIDs){
                 saveList.add(uuid.toString());
             }
-            plugin.getConfig().set(w.toString().toLowerCase(), saveList);
+            plugin.getConfig().set("players." + w.toString().toLowerCase(), saveList);
         }
         plugin.saveConfig();
     }
 
-    protected static enum WorldType {
+    public static enum WorldType {
         OVERWORLD,
         NETHER,
         END

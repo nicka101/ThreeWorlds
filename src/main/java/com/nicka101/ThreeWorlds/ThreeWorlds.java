@@ -1,7 +1,12 @@
 package com.nicka101.ThreeWorlds;
 
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.generator.BlockPopulator;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -11,6 +16,7 @@ public class ThreeWorlds extends JavaPlugin {
 
     private final Logger logger = this.getLogger();
     private final PlayerManager playerManager;
+    protected final String HOLDING_WORLD_NAME = "holding_world";
 
     @SuppressWarnings("unused")
     public ThreeWorlds(){
@@ -19,6 +25,7 @@ public class ThreeWorlds extends JavaPlugin {
     }
 
     public void onEnable(){
+        this.saveDefaultConfig(); //Doesn't matter if it already exists, this won't overwrite
         playerManager.Init();
         this.getServer().getPluginManager().registerEvents(new EventListener(this), this);
         this.getCommand("threeworlds").setExecutor(new ThreeWorldsExecutor(this));
@@ -30,7 +37,7 @@ public class ThreeWorlds extends JavaPlugin {
         log("ThreeWorlds has been disabled");
     }
 
-    protected PlayerManager getPlayerManager(){
+    public PlayerManager getPlayerManager(){
         return playerManager;
     }
 
@@ -40,5 +47,13 @@ public class ThreeWorlds extends JavaPlugin {
 
     protected void warning(String message){
         logger.warning(message);
+    }
+
+    @Override
+    public ChunkGenerator getDefaultWorldGenerator(String world, String id){
+        if(id.equalsIgnoreCase("end")){
+            return null; //Todo: Implement skylands generator for the end
+        }
+        return null;
     }
 }

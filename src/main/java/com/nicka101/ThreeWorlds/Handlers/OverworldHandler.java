@@ -1,6 +1,6 @@
 package com.nicka101.ThreeWorlds.Handlers;
 
-import com.nicka101.ThreeWorlds.PlayerManager;
+import com.nicka101.ThreeWorlds.ThreeWorlds;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -10,8 +10,8 @@ import org.bukkit.event.entity.EntityTargetEvent;
  */
 public class OverworldHandler extends WorldHandler {
 
-    public OverworldHandler(PlayerManager playerManager){
-        super(playerManager);
+    public OverworldHandler(ThreeWorlds plugin){
+        super(plugin);
     }
 
     @Override
