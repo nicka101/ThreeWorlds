@@ -55,7 +55,7 @@ public class OrePopulator extends BlockPopulator {
         int goldSize = config.getInt("options." + worldType + ".ores.size.gold", 4);
         int redstoneSize = config.getInt("options." + worldType + ".ores.size.redstone", 9);
         int lapisSize = config.getInt("options." + worldType + ".ores.size.lapis", 3);
-        int diamondSize = config.getInt("options." + worldType + ".ores.size.diamond", 2);
+        int diamondSize = config.getInt("options." + worldType + ".ores.size.diamond", 4);
 
         for(int x = 1; x <= 16; x++){
             for(int y = 1; y <= 256; y++){

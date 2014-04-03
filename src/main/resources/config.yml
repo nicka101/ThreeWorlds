@@ -17,7 +17,7 @@ options:
         gold: 7
         redstone: 6
         lapis: 3
-        diamond: 2
+        diamond: 4
   end:
     health: 40
     ores:
@@ -34,7 +34,7 @@ options:
         gold: 4
         redstone: 6
         lapis: 3
-        diamond: 3
+        diamond: 4
 players:
   overworld: []
   nether: []
