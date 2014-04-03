@@ -95,7 +95,7 @@ public class OrePopulator extends BlockPopulator {
             }
         }
         if(inCircle.size() == 0)return;
-        int trueCount = random.nextInt(count - 1) + 1;
+        int trueCount = count == 1 ? 1 : random.nextInt(count - 1) + 1;
         while(trueCount > 0){
             Block b = inCircle.get(random.nextInt(inCircle.size()));
             b.setType(mat);
