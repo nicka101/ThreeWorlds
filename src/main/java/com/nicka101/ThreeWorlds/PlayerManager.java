@@ -42,6 +42,7 @@ public class PlayerManager {
 
     public void AddPlayerToWorld(WorldType world, Player player){
         player.setMaxHealth(plugin.getConfig().getDouble("options." + world.toString().toLowerCase() + ".health", 20));
+        player.saveData();
         playerMap.get(world).add(player.getUniqueId());
     }
 
