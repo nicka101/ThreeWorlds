@@ -115,5 +115,6 @@ public class OrePopulator extends BlockPopulator {
             if(inCircle.size() == 0)return;
             trueCount--;
         }
+        inCircle.clear();
     }
 }

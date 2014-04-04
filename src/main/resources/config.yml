@@ -32,6 +32,8 @@ options:
       base: 40  
       variation: 39
       threshold: 0.1
+      multiplier: 0.2
+      skylands: false
       ores:
         #Rate is out of 50k and is chance to spawn a chunk
         rate:

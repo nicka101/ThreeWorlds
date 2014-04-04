@@ -10,9 +10,7 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Nicka101 on 03/04/2014.
@@ -23,25 +21,30 @@ public class EndGenerator extends ChunkGenerator {
     private final int BASE;
     private final int VARIATION;
     private final double THRESHOLD;
-    private final ThreeWorlds plugin;
+    private final double MULTIPLIER;
+    private final boolean SKYLANDS;
     private final List<BlockPopulator> populators;
+    private SimplexOctaveGenerator octaveGenerator = null;
 
     public EndGenerator(ThreeWorlds plugin){
         populators = new ArrayList<>();
         populators.add(new OrePopulator(plugin, PlayerManager.WorldType.END));
         populators.add(new TreePopulator(plugin, PlayerManager.WorldType.END, Material.ENDER_STONE));
-        this.plugin = plugin;
         ConfigurationSection sec = plugin.getConfig().getConfigurationSection("options.end.generation");
         this.SCALE = sec.getDouble("scale", 91);
         this.BASE = sec.getInt("base", 40);
         this.VARIATION = sec.getInt("variation", 39);
         this.THRESHOLD = sec.getDouble("threshold", 0.0);
+        this.MULTIPLIER = sec.getDouble("multiplier", 0.2);
+        this.SKYLANDS = sec.getBoolean("skylands", true);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public byte[][] generateBlockSections(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomes){
-        SimplexOctaveGenerator octaveGenerator = new SimplexOctaveGenerator(world.getSeed(), 8);
+        if(octaveGenerator == null){
+            octaveGenerator = new SimplexOctaveGenerator(world.getSeed(), 8);
+        }
         octaveGenerator.setScale(1/SCALE);
         byte[][] chunk = new byte[world.getMaxHeight() / 16][];
 
@@ -49,9 +52,12 @@ public class EndGenerator extends ChunkGenerator {
             for (int z = 0; z < 16; z++) {
                 for (int y=BASE - VARIATION; y< BASE + VARIATION; y++) {
                     double noise = octaveGenerator.noise((chunkX * 16) + x, y, (chunkZ * 16) + z, 0.5, 0.5);
-                    double variable = (y - BASE) / 17.0; // this will generate the offset
-                    variable = Math.abs(variable); // skylands?
-                    if(noise - variable > THRESHOLD)
+                    double a = (y - BASE) / 16.0;
+                    if(SKYLANDS){
+                        a = Math.abs(a);
+                    }
+                    a = MULTIPLIER * a;
+                    if(noise - a > THRESHOLD)
                         setBlock(x, y, z, chunk, Material.ENDER_STONE);
                 }
             }
@@ -64,6 +70,7 @@ public class EndGenerator extends ChunkGenerator {
         return populators;
     }
 
+    @SuppressWarnings("unused")
     private byte getBlock(int x, int y, int z, byte[][] chunk) {
         if (chunk[y>>4] == null)
             chunk[y>>4] = new byte[16*16*16];
