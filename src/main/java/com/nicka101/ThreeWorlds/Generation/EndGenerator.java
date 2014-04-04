@@ -11,6 +11,7 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Nicka101 on 03/04/2014.
