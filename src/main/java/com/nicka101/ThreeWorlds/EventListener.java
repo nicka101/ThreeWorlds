@@ -2,7 +2,6 @@ package com.nicka101.ThreeWorlds;
 
 import com.nicka101.ThreeWorlds.Generation.OrePopulator;
 import com.nicka101.ThreeWorlds.Generation.TreePopulator;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -13,7 +12,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
@@ -54,12 +52,6 @@ public class EventListener implements Listener {
             playerManager.GetHandlerForPlayer((Player) event.getEntity())
                     .processPlayerAttackedEvent(event);
         }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerSwitchItem(PlayerItemHeldEvent event){
-        plugin.getPlayerManager().GetHandlerForPlayer(event.getPlayer())
-                .processSwitchItemEvent(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
