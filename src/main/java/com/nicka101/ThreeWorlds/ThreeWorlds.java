@@ -1,5 +1,6 @@
 package com.nicka101.ThreeWorlds;
 
+import com.nicka101.ThreeWorlds.Generation.EndGenerator;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.generator.BlockPopulator;
@@ -52,7 +53,7 @@ public class ThreeWorlds extends JavaPlugin {
     @Override
     public ChunkGenerator getDefaultWorldGenerator(String world, String id){
         if(id.equalsIgnoreCase("end")){
-            return null; //Todo: Implement skylands generator for the end
+            return new EndGenerator(this);
         }
         return null;
     }

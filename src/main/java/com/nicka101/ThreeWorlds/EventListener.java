@@ -1,6 +1,9 @@
 package com.nicka101.ThreeWorlds;
 
 import com.nicka101.ThreeWorlds.Generation.OrePopulator;
+import com.nicka101.ThreeWorlds.Generation.TreePopulator;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,8 +13,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
 /**
@@ -54,6 +57,12 @@ public class EventListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerSwitchItem(PlayerItemHeldEvent event){
+        plugin.getPlayerManager().GetHandlerForPlayer(event.getPlayer())
+                .processSwitchItemEvent(event);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityTarget(EntityTargetEvent event){
         if(!(event.getTarget() instanceof Player))return;
         plugin.getPlayerManager().GetHandlerForPlayer((Player) event.getTarget())
@@ -77,8 +86,10 @@ public class EventListener implements Listener {
         if(!netherInitComplete){
             if(event.getWorld().getEnvironment() != World.Environment.NETHER)return;
             World nether = event.getWorld();
-                nether.getPopulators().add(new OrePopulator(plugin, PlayerManager.WorldType.NETHER));
+            nether.getPopulators().add(new OrePopulator(plugin, PlayerManager.WorldType.NETHER));
             plugin.log("Added Ore BlockPopulator to nether chunks!");
+            nether.getPopulators().add(new TreePopulator(plugin, PlayerManager.WorldType.NETHER, Material.SOUL_SAND));
+            plugin.log("Added Tree BlockPopulator to nether chunks!");
             netherInitComplete = true;
         }
     }

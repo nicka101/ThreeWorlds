@@ -69,7 +69,9 @@ public class PlayerManager {
     }
 
     public boolean IsPlayerHostile(Player player, Player player2){
-        return !IsPlayerInWorld(player, GetPlayerWorld(player2));
+        WorldType a = GetPlayerWorld(player2);
+        if(a == null)return true;
+        return !IsPlayerInWorld(player, a);
     }
 
     public WorldType GetPlayerWorld(Player player){

@@ -1,6 +1,5 @@
 package com.nicka101.ThreeWorlds.Handlers;
 
-import com.nicka101.ThreeWorlds.PlayerManager;
 import com.nicka101.ThreeWorlds.ResourcePackSender;
 import com.nicka101.ThreeWorlds.ThreeWorlds;
 import org.bukkit.World;

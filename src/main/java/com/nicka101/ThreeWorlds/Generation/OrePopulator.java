@@ -6,7 +6,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.BlockPopulator;
 
 import java.util.ArrayList;
@@ -17,13 +17,26 @@ import java.util.Random;
  */
 public class OrePopulator extends BlockPopulator {
 
-    private final ThreeWorlds plugin;
-    private final String worldType;
     private final Material replaceable;
+    private final int coalChance;
+    private final int ironChance;
+    private final int ironMin;
+    private final int goldChance;
+    private final int goldMin;
+    private final int redstoneChance;
+    private final int redstoneMin;
+    private final int lapisChance;
+    private final int lapisMin;
+    private final int diamondChance;
+    private final int diamondMin;
+    private final int coalSize;
+    private final int ironSize;
+    private final int goldSize;
+    private final int redstoneSize;
+    private final int lapisSize;
+    private final int diamondSize;
 
     public OrePopulator(ThreeWorlds plugin, WorldType worldType){
-        this.plugin = plugin;
-        this.worldType = worldType.toString().toLowerCase();
         switch (worldType){
             case NETHER:
                 replaceable = Material.NETHERRACK;
@@ -34,29 +47,28 @@ public class OrePopulator extends BlockPopulator {
             default:
                 replaceable = Material.STONE; //Should never occur but handle it anyway
         }
+        ConfigurationSection config = plugin.getConfig().getConfigurationSection("options." + worldType.toString().toLowerCase() + ".generation.ores");
+        coalChance = config.getInt("rate.coal", 20);
+        ironChance = config.getInt("rate.iron", 8);
+        ironMin = coalChance + 1;
+        goldChance = config.getInt("rate.gold", 4);
+        goldMin = coalChance + ironChance + 1;
+        redstoneChance = config.getInt("rate.redstone", 9);
+        redstoneMin = goldMin + goldChance + 1;
+        lapisChance = config.getInt("rate.lapis", 3);
+        lapisMin = redstoneMin + redstoneChance + 1;
+        diamondChance = config.getInt("rate.diamond", 1);
+        diamondMin = lapisMin + lapisChance + 1;
+
+        coalSize = config.getInt("size.coal", 6);
+        ironSize = config.getInt("size.iron", 4);
+        goldSize = config.getInt("size.gold", 4);
+        redstoneSize = config.getInt("size.redstone", 9);
+        lapisSize = config.getInt("size.lapis", 3);
+        diamondSize = config.getInt("size.diamond", 4);
     }
 
     public void populate(World world, Random random, Chunk chunk){
-        FileConfiguration config = plugin.getConfig();
-        int coalChance = config.getInt("options." + worldType + ".ores.rate.coal", 20);
-        int ironChance = config.getInt("options." + worldType + ".ores.rate.iron", 8);
-        int ironMin = coalChance + 1;
-        int goldChance = config.getInt("options." + worldType + ".ores.rate.gold", 4);
-        int goldMin = coalChance + ironChance + 1;
-        int redstoneChance = config.getInt("options." + worldType + ".ores.rate.gold", 9);
-        int redstoneMin = goldMin + goldChance + 1;
-        int lapisChance = config.getInt("options." + worldType + ".ores.rate.gold", 3);
-        int lapisMin = redstoneMin + redstoneChance + 1;
-        int diamondChance = config.getInt("options." + worldType + ".ores.rate.diamond", 1);
-        int diamondMin = lapisMin + lapisChance + 1;
-
-        int coalSize = config.getInt("options." + worldType + ".ores.size.coal", 6);
-        int ironSize = config.getInt("options." + worldType + ".ores.size.iron", 4);
-        int goldSize = config.getInt("options." + worldType + ".ores.size.gold", 4);
-        int redstoneSize = config.getInt("options." + worldType + ".ores.size.redstone", 9);
-        int lapisSize = config.getInt("options." + worldType + ".ores.size.lapis", 3);
-        int diamondSize = config.getInt("options." + worldType + ".ores.size.diamond", 4);
-
         for(int x = 1; x <= 16; x++){
             for(int y = 1; y <= 256; y++){
                 for(int z = 1; z <= 16; z++){
