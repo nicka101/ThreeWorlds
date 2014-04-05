@@ -1,10 +1,14 @@
 package com.nicka101.ThreeWorlds;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * Created by Nicka101 on 02/04/2014.
@@ -12,15 +16,41 @@ import org.bukkit.entity.Player;
 public class ThreeWorldsExecutor implements CommandExecutor {
 
     private final ThreeWorlds plugin;
+    protected final Inventory allegianceChangeInv;
 
     protected ThreeWorldsExecutor(ThreeWorlds plugin){
         this.plugin = plugin;
+
+        allegianceChangeInv = plugin.getServer().createInventory(null, 9, "Allegiance Selection");
+        ItemStack overworldSelect = new ItemStack(Material.STONE, 1);
+        ItemMeta i = overworldSelect.getItemMeta();
+        i.setDisplayName(ChatColor.GREEN + "Overworld Allegiance");
+        overworldSelect.setItemMeta(i);
+        ItemStack netherSelect = new ItemStack(Material.NETHERRACK, 1);
+        i = netherSelect.getItemMeta();
+        i.setDisplayName(ChatColor.RED + "Nether Allegiance");
+        netherSelect.setItemMeta(i);
+        ItemStack endSelect = new ItemStack(Material.ENDER_STONE, 1);
+        i = endSelect.getItemMeta();
+        i.setDisplayName(ChatColor.DARK_PURPLE + "End Allegiance");
+        endSelect.setItemMeta(i);
+        allegianceChangeInv.setContents(new ItemStack[]{ null, null, null, overworldSelect, netherSelect, endSelect });
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
         if(!(sender instanceof Player))return true;
         Player player = (Player)sender;
         if(args.length == 0)return false;
+        if(args.length == 1){
+            if(args[0].equalsIgnoreCase("select")){
+                if(plugin.getPlayerManager().IsPlayerInWorld(player)){
+                    player.sendMessage(ChatColor.RED + "You have already selected an allegiance!");
+                    return true;
+                }
+                player.openInventory(allegianceChangeInv);
+                return true;
+            }
+        }
         if(args.length == 2){
             if(args[0].equalsIgnoreCase("select")){
                 if(plugin.getPlayerManager().IsPlayerInWorld(player)){

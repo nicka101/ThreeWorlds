@@ -2,6 +2,7 @@ package com.nicka101.ThreeWorlds;
 
 import com.nicka101.ThreeWorlds.Generation.OrePopulator;
 import com.nicka101.ThreeWorlds.Generation.TreePopulator;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -11,7 +12,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
@@ -84,5 +87,39 @@ public class EventListener implements Listener {
             plugin.log("Added Tree BlockPopulator to nether chunks!");
             netherInitComplete = true;
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onInventoryClick(InventoryClickEvent event){
+        if(!(event.getWhoClicked() instanceof Player))return;
+        if(event.getInventory().hashCode() != plugin.executor.allegianceChangeInv.hashCode()){
+            return;
+        }
+        if(!event.isLeftClick()){
+            event.setCancelled(true);
+            return;
+        }
+        if(event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR)return;
+        switch (event.getCurrentItem().getType()){
+            case STONE:
+                plugin.getPlayerManager().AddPlayerToWorld(PlayerManager.WorldType.OVERWORLD, (Player)event.getWhoClicked());
+                break;
+            case NETHERRACK:
+                plugin.getPlayerManager().AddPlayerToWorld(PlayerManager.WorldType.NETHER, (Player)event.getWhoClicked());
+                break;
+            case ENDER_STONE:
+                plugin.getPlayerManager().AddPlayerToWorld(PlayerManager.WorldType.END, (Player)event.getWhoClicked());
+                break;
+            default:
+                ((Player) event.getWhoClicked()).sendMessage(ChatColor.RED + "Fatal Error. This Shouldn't be possible, report it to nicka101");
+        }
+        ((Player) event.getWhoClicked()).sendMessage(ChatColor.GOLD + "Welcome to the Winning Team!");
+        event.getWhoClicked().closeInventory();
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(PlayerInteractEvent event){
+        plugin.getPlayerManager().GetHandlerForPlayer(event.getPlayer())
+                .processPlayerInteractEvent(event);
     }
 }

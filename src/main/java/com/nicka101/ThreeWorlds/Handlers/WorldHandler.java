@@ -8,7 +8,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class WorldHandler {
 
-    private final ThreeWorlds plugin;
+    protected final ThreeWorlds plugin;
 
     public WorldHandler(ThreeWorlds plugin){
         this.plugin = plugin;
@@ -50,6 +50,10 @@ public class WorldHandler {
 
     public void processLoginEvent(PlayerJoinEvent event){
         sendResourcePack(event.getPlayer().getWorld().getEnvironment(), event.getPlayer());
+    }
+
+    public void processPlayerInteractEvent(PlayerInteractEvent event){
+        //Do Nothing
     }
 
     protected void sendResourcePack(World.Environment environment, Player player){

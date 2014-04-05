@@ -33,10 +33,10 @@ public class EndGenerator extends ChunkGenerator {
         populators.add(new TreePopulator(plugin, PlayerManager.WorldType.END, Material.ENDER_STONE));
         ConfigurationSection sec = plugin.getConfig().getConfigurationSection("options.end.generation");
         this.SCALE = sec.getDouble("scale", 91);
-        this.BASE = sec.getInt("base", 40);
-        this.VARIATION = sec.getInt("variation", 39);
-        this.THRESHOLD = sec.getDouble("threshold", 0.0);
-        this.MULTIPLIER = sec.getDouble("multiplier", 0.2);
+        this.BASE = sec.getInt("base", 128);
+        this.VARIATION = sec.getInt("variation", 127);
+        this.THRESHOLD = sec.getDouble("threshold", 0.075);
+        this.MULTIPLIER = sec.getDouble("multiplier", 0.13);
         this.SKYLANDS = sec.getBoolean("skylands", true);
     }
 

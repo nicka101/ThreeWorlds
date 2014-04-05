@@ -25,15 +25,18 @@ options:
           diamond: 4
   end:
     health: 40
+    teleport:
+      distance: 16
+      cooldown: 10000
     generation:
       #Ender tree chance is per 10k
       tree: 500
       scale: 62
-      base: 40  
-      variation: 39
-      threshold: 0.1
-      multiplier: 0.2
-      skylands: false
+      base: 128  
+      variation: 127
+      threshold: 0.075
+      multiplier: 0.13
+      skylands: true
       ores:
         #Rate is out of 50k and is chance to spawn a chunk
         rate:
