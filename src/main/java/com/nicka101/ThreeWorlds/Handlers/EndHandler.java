@@ -66,6 +66,8 @@ public class EndHandler extends WorldHandler {
         target.setDirection(old.getDirection());
         target.setPitch(old.getPitch());
         target.setYaw(old.getYaw());
+        target.setX(target.getX() + 0.5);
+        target.setZ(target.getZ() + 0.5);
         event.getPlayer().teleport(target);
     }
 }
