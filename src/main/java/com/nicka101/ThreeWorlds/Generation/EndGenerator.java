@@ -7,6 +7,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.util.noise.OctaveGenerator;
+import org.bukkit.util.noise.PerlinOctaveGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import java.util.ArrayList;
@@ -24,8 +26,10 @@ public class EndGenerator extends ChunkGenerator {
     private final double THRESHOLD;
     private final double MULTIPLIER;
     private final boolean SKYLANDS;
+    private final boolean SIMPLEX;
+    private final int OCTAVES;
     private final List<BlockPopulator> populators;
-    private SimplexOctaveGenerator octaveGenerator = null;
+    private OctaveGenerator generator = null;
 
     public EndGenerator(ThreeWorlds plugin){
         populators = new ArrayList<>();
@@ -38,21 +42,27 @@ public class EndGenerator extends ChunkGenerator {
         this.THRESHOLD = sec.getDouble("threshold", 0.075);
         this.MULTIPLIER = sec.getDouble("multiplier", 0.13);
         this.SKYLANDS = sec.getBoolean("skylands", true);
+        this.SIMPLEX = sec.getBoolean("simplex", true);
+        this.OCTAVES = sec.getInt("octaves", 8);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public byte[][] generateBlockSections(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomes){
-        if(octaveGenerator == null){
-            octaveGenerator = new SimplexOctaveGenerator(world.getSeed(), 8);
+        if(generator == null){
+            if(SIMPLEX){
+                generator = new SimplexOctaveGenerator(world.getSeed(), OCTAVES);
+            } else {
+                generator = new PerlinOctaveGenerator(world.getSeed(), OCTAVES);
+            }
         }
-        octaveGenerator.setScale(1/SCALE);
+        generator.setScale(1/SCALE);
         byte[][] chunk = new byte[world.getMaxHeight() / 16][];
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 for (int y=BASE - VARIATION; y< BASE + VARIATION; y++) {
-                    double noise = octaveGenerator.noise((chunkX * 16) + x, y, (chunkZ * 16) + z, 0.5, 0.5);
+                    double noise = generator.noise((chunkX * 16) + x, y, (chunkZ * 16) + z, 0.5, 0.5);
                     double a = (y - BASE) / 16.0;
                     if(SKYLANDS){
                         a = Math.abs(a);
