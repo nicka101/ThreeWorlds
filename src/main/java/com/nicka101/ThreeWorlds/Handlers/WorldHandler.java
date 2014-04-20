@@ -2,7 +2,10 @@ package com.nicka101.ThreeWorlds.Handlers;
 
 import com.nicka101.ThreeWorlds.ResourcePackSender;
 import com.nicka101.ThreeWorlds.ThreeWorlds;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -24,11 +27,7 @@ public class WorldHandler {
     }
 
     public void processDamageEvent(EntityDamageEvent event){
-        //Do nothing
-    }
-
-    public void processPvpEvent(EntityDamageByEntityEvent event){
-        if(!plugin.getPlayerManager().IsPlayerHostile((Player) event.getDamager(), (Player) event.getEntity())){
+        if(event.getCause() == EntityDamageEvent.DamageCause.FALL && probableSpongeLanding(event.getEntity().getLocation().getBlock().getRelative(BlockFace.DOWN))){
             event.setCancelled(true);
         }
     }
@@ -76,5 +75,17 @@ public class WorldHandler {
             default:
                 return null;
         }
+    }
+
+    private boolean probableSpongeLanding(Block landingBlock){
+        return landingBlock.getType() == Material.SPONGE ||
+                landingBlock.getRelative(BlockFace.NORTH).getType() == Material.SPONGE ||
+                landingBlock.getRelative(BlockFace.SOUTH).getType() == Material.SPONGE ||
+                landingBlock.getRelative(BlockFace.EAST).getType() == Material.SPONGE ||
+                landingBlock.getRelative(BlockFace.WEST).getType() == Material.SPONGE ||
+                landingBlock.getRelative(BlockFace.NORTH_EAST).getType() == Material.SPONGE ||
+                landingBlock.getRelative(BlockFace.SOUTH_EAST).getType() == Material.SPONGE ||
+                landingBlock.getRelative(BlockFace.NORTH_WEST).getType() == Material.SPONGE ||
+                landingBlock.getRelative(BlockFace.SOUTH_WEST).getType() == Material.SPONGE;
     }
 }

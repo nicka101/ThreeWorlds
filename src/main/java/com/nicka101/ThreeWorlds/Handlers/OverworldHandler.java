@@ -22,17 +22,14 @@ public class OverworldHandler extends WorldHandler {
 
     @Override
     public void processDamageEvent(EntityDamageEvent event){
+        super.processDamageEvent(event);
         if(event.getCause() == DamageCause.DROWNING || event.getCause() == DamageCause.FALL)event.setCancelled(true);
-    }
-
-    @Override
-    public void processEntityTargetEvent(EntityTargetEvent event){
-        //Do Nothing
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public void processBlockBreak(BlockBreakEvent event){
+        super.processBlockBreak(event);
         if(event.getPlayer().isSneaking() || event.getPlayer().getItemInHand() == null || event.getPlayer().getItemInHand().getType() != Material.DIAMOND_PICKAXE)return;
         HashSet<Block> toBreak = getBlocksToBreak(event.getBlock(), event.getBlock().getFace(event.getPlayer().getLastTwoTargetBlocks(null, 5).get(0)));
         Material blockType = event.getBlock().getType();

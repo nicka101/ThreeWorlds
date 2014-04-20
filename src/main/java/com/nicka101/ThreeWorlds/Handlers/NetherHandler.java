@@ -17,6 +17,7 @@ public class NetherHandler extends WorldHandler {
 
     @Override
     public void processDamageEvent(EntityDamageEvent event){
+        super.processDamageEvent(event);
         if(event.getCause() == EntityDamageEvent.DamageCause.FIRE
                 || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
                 || event.getCause() == EntityDamageEvent.DamageCause.LAVA){
@@ -27,16 +28,19 @@ public class NetherHandler extends WorldHandler {
 
     @Override
     public void processPlayerAttackEvent(EntityDamageByEntityEvent event){
+        super.processPlayerAttackEvent(event);
         if(event.getEntity() instanceof PigZombie)event.setCancelled(true);
     }
 
     @Override
     public void processPlayerAttackedEvent(EntityDamageByEntityEvent event){
+        super.processPlayerAttackedEvent(event);
         if(event.getDamager() instanceof PigZombie)event.setCancelled(true);
     }
 
     @Override
     public void processEntityTargetEvent(EntityTargetEvent event){
+        super.processEntityTargetEvent(event);
         if(event.getEntity() instanceof PigZombie)event.setCancelled(true);
     }
 }

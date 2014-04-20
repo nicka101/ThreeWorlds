@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.generator.BlockPopulator;
 
 import java.util.Random;
@@ -45,12 +44,13 @@ public class ShrinePopulator extends BlockPopulator {
                     double dist = distanceFromCenter(chunkX + x, chunkZ + z);
                     if(dist > RADIUS-1 && dist <= RADIUS) chunk.getBlock(x, y, z).setType(Material.SMOOTH_BRICK);
                     else if(dist <= RADIUS-1){
-                        if((dist > INNER_RADIUS && y % 11 == 0) || y == 0)genFloor(chunk, x, y, z);
+                        if((dist > INNER_RADIUS && y % 11 == 0))genFloor(chunk, x, y, z);
                         else if(dist <= INNER_RADIUS) {
-                            if (y % 11 == 1 || y % 11 == 2) chunk.getBlock(x, y, z).setType(Material.AIR);
-                            else if(dist > INNER_RADIUS - 1) chunk.getBlock(x, y, z).setType(Material.GLASS);
-                            else if(y == 4 || y == 5 || y == 6) chunk.getBlock(x, y, z).setType(Material.STATIONARY_WATER);
-                            else if(y == 3)setSign(chunk.getBlock(x, y, z));
+                            if (y % 11 == 1 || y % 11 == 2 || y % 11 == 3) chunk.getBlock(x, y, z).setType(Material.AIR);
+                            else if(dist > INNER_RADIUS - 1){
+                                chunk.getBlock(x, y, z).setType(y % 11 == 0 ? Material.SPONGE : Material.GLASS);
+                            }
+                            else if(y == 0) chunk.getBlock(x, y, z).setType(Material.SPONGE);
                             else chunk.getBlock(x, y, z).setType(Material.AIR);
                         } else {
                             Block b = chunk.getBlock(x, y, z);
@@ -69,12 +69,6 @@ public class ShrinePopulator extends BlockPopulator {
 
     private double distanceFromCenter(int x, int z){
         return distance(x, z, center.getX(), center.getZ());
-    }
-
-    @SuppressWarnings("deprecation")
-    private void setSign(Block b){
-        b.setType(Material.WALL_SIGN);
-        b.setData((byte)3);
     }
 
     private void genFloor(Chunk chunk, int x, int y, int z){

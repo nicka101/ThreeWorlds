@@ -51,10 +51,10 @@ public class EventListener implements Listener {
     public void onEntityDamageByEntity(final EntityDamageByEntityEvent event){
         if(!(event.getEntity() instanceof Player || event.getDamager() instanceof Player))return;
         PlayerManager playerManager = plugin.getPlayerManager();
-        if(event.getEntity() instanceof Player && event.getDamager() instanceof Player){
-            playerManager.GetHandlerForPlayer((Player) event.getDamager())
-                    .processPvpEvent(event);
-        } else if(event.getDamager() instanceof Player){
+        if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
+            return;//PvP handled by teams
+        }
+        if(event.getDamager() instanceof Player){
             playerManager.GetHandlerForPlayer((Player) event.getDamager())
                     .processPlayerAttackEvent(event);
         } else {
@@ -157,7 +157,6 @@ public class EventListener implements Listener {
         switch (event.getClickedBlock().getType()){
             case IRON_PLATE:
                 target = event.getClickedBlock().getWorld().getHighestBlockAt(event.getClickedBlock().getLocation());
-                if(target == event.getClickedBlock())return;
                 break;
             case GOLD_PLATE:
                 target = getNextOpenSpace(
@@ -167,7 +166,7 @@ public class EventListener implements Listener {
                 );
                 break;
         }
-        if(target == null)return;
+        if(target == null || target == event.getClickedBlock())return;
         Location targetLocation = target.getLocation().add(0.5, 1, 0.5);
         targetLocation.setPitch(event.getPlayer().getLocation().getPitch());
         targetLocation.setYaw(event.getPlayer().getLocation().getYaw());

@@ -35,17 +35,20 @@ public class EndHandler extends WorldHandler {
 
     @Override
     public void processPlayerAttackEvent(EntityDamageByEntityEvent event){
+        super.processPlayerAttackEvent(event);
         if(event.getEntity() instanceof Enderman)event.setCancelled(true);
     }
 
     @Override
     public void processEntityTargetEvent(EntityTargetEvent event){
+        super.processEntityTargetEvent(event);
         if(event.getEntity() instanceof Enderman)event.setCancelled(true);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void processPlayerInteractEvent(PlayerInteractEvent event){
+        super.processPlayerInteractEvent(event);
         if(event.getAction() != Action.RIGHT_CLICK_AIR)return;
         if(event.getPlayer().getItemInHand() == null || event.getPlayer().getItemInHand().getType() != Material.OBSIDIAN)return;
         if(teleportCooldowns.containsKey(event.getPlayer().getUniqueId()) && teleportCooldowns.get(event.getPlayer().getUniqueId()) > System.currentTimeMillis()){
