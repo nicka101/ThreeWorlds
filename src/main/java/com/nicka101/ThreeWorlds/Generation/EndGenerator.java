@@ -28,6 +28,7 @@ public class EndGenerator extends ChunkGenerator {
     private final boolean SKYLANDS;
     private final boolean SIMPLEX;
     private final int OCTAVES;
+    private final boolean INVERT_THRESHOLD;
     private final List<BlockPopulator> populators;
     private OctaveGenerator generator = null;
 
@@ -35,15 +36,17 @@ public class EndGenerator extends ChunkGenerator {
         populators = new ArrayList<>();
         populators.add(new OrePopulator(plugin, PlayerManager.WorldType.END));
         populators.add(new TreePopulator(plugin, PlayerManager.WorldType.END, Material.ENDER_STONE));
+        populators.add(new ShrinePopulator(plugin, PlayerManager.WorldType.END));
         ConfigurationSection sec = plugin.getConfig().getConfigurationSection("options.end.generation");
         this.SCALE = sec.getDouble("scale", 91);
         this.BASE = sec.getInt("base", 128);
-        this.VARIATION = sec.getInt("variation", 127);
+        this.VARIATION = sec.getInt("variation", 128);
         this.THRESHOLD = sec.getDouble("threshold", 0.075);
         this.MULTIPLIER = sec.getDouble("multiplier", 0.13);
         this.SKYLANDS = sec.getBoolean("skylands", true);
         this.SIMPLEX = sec.getBoolean("simplex", true);
         this.OCTAVES = sec.getInt("octaves", 8);
+        this.INVERT_THRESHOLD = sec.getBoolean("invert_threshold", false);
     }
 
     @SuppressWarnings("deprecation")
@@ -68,8 +71,7 @@ public class EndGenerator extends ChunkGenerator {
                         a = Math.abs(a);
                     }
                     a = MULTIPLIER * a;
-                    if(noise - a > THRESHOLD)
-                        setBlock(x, y, z, chunk, Material.ENDER_STONE);
+                    if((!INVERT_THRESHOLD && noise - a > THRESHOLD) || (INVERT_THRESHOLD && noise - a < THRESHOLD)) setBlock(x, y, z, chunk, Material.ENDER_STONE);
                 }
             }
         }
@@ -95,11 +97,6 @@ public class EndGenerator extends ChunkGenerator {
         }
     }
 
-    /*
-     * Sets a block in the chunk. If the Block section doesn't exist, it allocates it.
-     * [y>>4] the section id (y/16)
-     * the math for the second offset confuses me
-     */
     @SuppressWarnings("deprecation")
     private void setBlock(int x, int y, int z, byte[][] chunk, Material material) {
         if (chunk[y>>4] == null)

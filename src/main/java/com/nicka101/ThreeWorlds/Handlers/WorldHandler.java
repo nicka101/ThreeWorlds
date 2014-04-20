@@ -4,6 +4,7 @@ import com.nicka101.ThreeWorlds.ResourcePackSender;
 import com.nicka101.ThreeWorlds.ThreeWorlds;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -53,6 +54,10 @@ public class WorldHandler {
     }
 
     public void processPlayerInteractEvent(PlayerInteractEvent event){
+        //Do Nothing
+    }
+
+    public void processBlockBreak(BlockBreakEvent event){
         //Do Nothing
     }
 

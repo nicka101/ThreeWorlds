@@ -18,11 +18,11 @@ public class ThreeWorldsExecutor implements CommandExecutor {
     private final ThreeWorlds plugin;
     protected final Inventory allegianceChangeInv;
 
-    protected ThreeWorldsExecutor(ThreeWorlds plugin){
+    protected ThreeWorldsExecutor(final ThreeWorlds plugin){
         this.plugin = plugin;
 
         allegianceChangeInv = plugin.getServer().createInventory(null, 9, "Allegiance Selection");
-        ItemStack overworldSelect = new ItemStack(Material.STONE, 1);
+        ItemStack overworldSelect = new ItemStack(Material.GRASS, 1);
         ItemMeta i = overworldSelect.getItemMeta();
         i.setDisplayName(ChatColor.GREEN + "Overworld Allegiance");
         overworldSelect.setItemMeta(i);
@@ -37,7 +37,7 @@ public class ThreeWorldsExecutor implements CommandExecutor {
         allegianceChangeInv.setContents(new ItemStack[]{ null, null, null, overworldSelect, netherSelect, endSelect });
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args){
         if(!(sender instanceof Player))return true;
         Player player = (Player)sender;
         if(args.length == 0)return false;

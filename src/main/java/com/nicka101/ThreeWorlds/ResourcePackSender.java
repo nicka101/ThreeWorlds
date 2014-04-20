@@ -11,7 +11,7 @@ public class ResourcePackSender extends BukkitRunnable {
     private final Player player;
     private final String resourcePackUrl;
 
-    public ResourcePackSender(Player player, String resourcePackUrl){
+    public ResourcePackSender(final Player player, final String resourcePackUrl){
         this.player = player;
         this.resourcePackUrl = resourcePackUrl;
     }

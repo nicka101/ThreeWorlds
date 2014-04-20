@@ -5,7 +5,7 @@ options:
     health: 16
     generation:
       #Nether tree chance is per 10k (soulsand only)
-      tree: 2000
+      tree: 200
       ores:
         #Rate is out of 50k and is chance to spawn a chunk
         rate:
@@ -30,15 +30,16 @@ options:
       cooldown: 10000
     generation:
       #Ender tree chance is per 10k
-      tree: 500
+      tree: 7
       scale: 62
       base: 128  
-      variation: 127
+      variation: 128
       threshold: 0.075
       multiplier: 0.13
       skylands: true
       simplex: true
       octaves: 8
+      invert_threshold: false
       ores:
         #Rate is out of 50k and is chance to spawn a chunk
         rate:
