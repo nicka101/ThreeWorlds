@@ -40,7 +40,6 @@ public class NetherHandler extends WorldHandler {
 
     @Override
     public void processEntityTargetEvent(EntityTargetEvent event){
-        super.processEntityTargetEvent(event);
         if(event.getEntity() instanceof PigZombie)event.setCancelled(true);
     }
 }

@@ -26,6 +26,10 @@ public class OverworldHandler extends WorldHandler {
         if(event.getCause() == DamageCause.DROWNING || event.getCause() == DamageCause.FALL)event.setCancelled(true);
     }
 
+    public void processEntityTargetEvent(EntityTargetEvent event){
+        //Do Nothing
+    }
+
     @Override
     @SuppressWarnings("deprecation")
     public void processBlockBreak(BlockBreakEvent event){
