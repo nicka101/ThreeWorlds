@@ -30,6 +30,7 @@ public class EventListener implements Listener {
 
     protected EventListener(final ThreeWorlds plugin){
         this.plugin = plugin;
+        new WaterDamageTask(plugin).runTaskTimer(plugin, 1, 1);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -140,6 +141,12 @@ public class EventListener implements Listener {
     public void onBlockBreak(final BlockBreakEvent event){
         plugin.getPlayerManager().GetHandlerForPlayer(event.getPlayer())
                 .processBlockBreak(event);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerMove(final PlayerMoveEvent event){
+        plugin.getPlayerManager().GetHandlerForPlayer(event.getPlayer())
+                .processMoveEvent(event);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

@@ -1,10 +1,12 @@
 package com.nicka101.ThreeWorlds.Handlers;
 
 import com.nicka101.ThreeWorlds.ThreeWorlds;
+import org.bukkit.block.Block;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 /**
  * Created by Nicka101 on 01/04/2014.
@@ -41,5 +43,10 @@ public class NetherHandler extends WorldHandler {
     @Override
     public void processEntityTargetEvent(EntityTargetEvent event){
         if(event.getEntity() instanceof PigZombie)event.setCancelled(true);
+    }
+
+    @Override
+    public void processMoveEvent(PlayerMoveEvent event){
+        TouchingWater(event.getPlayer());
     }
 }
