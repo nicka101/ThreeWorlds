@@ -30,12 +30,10 @@ public class ShrinePopulator extends BlockPopulator {
     @Override
     public void populate(World world, Random random, Chunk chunk){
         Chunk spawnChunk = world.getSpawnLocation().getChunk();
-        if(distance(spawnChunk.getX(), spawnChunk.getZ(), chunk.getX(), chunk.getZ()) > 3)return;
         if(center == null){
             center = spawnChunk.getBlock(8, 0, 8).getLocation();
-            world.setSpawnLocation(center.getBlockX(), 64, center.getBlockZ());
-            plugin.log("Spawn Location for World " + world.getName() + " set to: " + center.getBlockX() + ", " + center.getBlockZ());
         }
+        if(distance(spawnChunk.getX(), spawnChunk.getZ(), chunk.getX(), chunk.getZ()) > 3)return;
         int chunkX = chunk.getX() * 16;
         int chunkZ = chunk.getZ() * 16;
         for(int x = 0; x < 16; x++){

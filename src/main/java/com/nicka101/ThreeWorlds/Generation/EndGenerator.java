@@ -2,6 +2,7 @@ package com.nicka101.ThreeWorlds.Generation;
 
 import com.nicka101.ThreeWorlds.PlayerManager;
 import com.nicka101.ThreeWorlds.ThreeWorlds;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -107,5 +108,10 @@ public class EndGenerator extends ChunkGenerator {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Location getFixedSpawnLocation(World world, Random random){
+        return world.getBlockAt(8, 255, 8).getLocation().add(0.5, 0, 0.5);
     }
 }
