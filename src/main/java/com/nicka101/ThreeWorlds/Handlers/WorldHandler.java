@@ -3,6 +3,7 @@ package com.nicka101.ThreeWorlds.Handlers;
 import com.nicka101.ThreeWorlds.Events.EntityDamageByWaterEvent;
 import com.nicka101.ThreeWorlds.ResourcePackSender;
 import com.nicka101.ThreeWorlds.ThreeWorlds;
+import com.nicka101.ThreeWorlds.WaterCollisionType;
 import net.minecraft.server.v1_7_R3.AxisAlignedBB;
 import net.minecraft.server.v1_7_R3.MathHelper;
 import org.bukkit.GameMode;
@@ -18,13 +19,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Created by Nicka101 on 01/04/2014.
@@ -75,6 +75,30 @@ public class WorldHandler {
         //Do Nothing
     }
 
+    public void processRespawnEvent(PlayerRespawnEvent event){
+        //Do Nothing
+    }
+
+    public void processTeleportEvent(PlayerTeleportEvent event){
+        //Do Nothing
+    }
+
+    public void processNearbyWaterMove(Player p){
+        //Do Nothing
+    }
+
+    public void processDeathEvent(PlayerDeathEvent event){
+        if(event.getEntity().hasMetadata("waterCollisionBlock")){
+            event.getEntity().removeMetadata("waterCollisionBlock", plugin);
+            event.getEntity().removeMetadata("waterCollisionTicks", plugin);
+            event.getEntity().removeMetadata("waterCollisionType", plugin);
+        }
+        if(event.getEntity().getLastDamageCause() instanceof EntityDamageByWaterEvent){
+            EntityDamageByWaterEvent dmgEvent = (EntityDamageByWaterEvent)event.getEntity().getLastDamageCause();
+            event.setDeathMessage(event.getEntity().getDisplayName() + " dissolved in water");
+        }
+    }
+
     protected void sendResourcePack(World.Environment environment, Player player){
         if(getResourcePackUrl(environment) != null){
             new ResourcePackSender(player, getResourcePackUrl(environment)).runTask(plugin);
@@ -82,20 +106,24 @@ public class WorldHandler {
     }
 
     @Deprecated
-    protected void TouchingWater(Player p){
+    @SuppressWarnings("deprecation")
+    protected void TouchingWater(Player p, WaterCollisionType waterCollisionType){
+        if(p.isDead())return;
         Block b =  AABBIntersectsWater(p.getWorld(), ((CraftPlayer)p).getHandle().boundingBox);
-        if(b == null && p.hasMetadata("waterDamageBlock")){
-            p.removeMetadata("waterDamageBlock", plugin);
-            p.removeMetadata("waterDamageTicks", plugin);
+        if(b == null && p.hasMetadata("waterCollisionBlock")){
+            p.removeMetadata("waterCollisionBlock", plugin);
+            p.removeMetadata("waterCollisionTicks", plugin);
+            p.removeMetadata("waterCollisionType", plugin);
         }
         else if(b != null){
-            if(p.hasMetadata("waterDamageBlock"))p.removeMetadata("waterDamageBlock", plugin);
-            p.setMetadata("waterDamageBlock", new FixedMetadataValue(plugin, b));
+            if(p.hasMetadata("waterCollisionBlock"))p.removeMetadata("waterCollisionBlock", plugin);
+            p.setMetadata("waterCollisionBlock", new FixedMetadataValue(plugin, b));
+            p.setMetadata("waterCollisionType", new FixedMetadataValue(plugin, waterCollisionType));
         }
     }
 
     @Deprecated
-    protected Block AABBIntersectsWater(World world, AxisAlignedBB boundingBox){
+    public static Block AABBIntersectsWater(World world, AxisAlignedBB boundingBox){
         int i = MathHelper.floor(boundingBox.a);
         int j = MathHelper.floor(boundingBox.d + 1.0D);
         int k = MathHelper.floor(boundingBox.b);

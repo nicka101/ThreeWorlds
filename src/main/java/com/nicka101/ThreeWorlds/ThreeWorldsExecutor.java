@@ -5,10 +5,15 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 /**
  * Created by Nicka101 on 02/04/2014.
@@ -96,6 +101,14 @@ public class ThreeWorldsExecutor implements CommandExecutor {
                 }
                 player.sendMessage(ChatColor.GOLD + "At least you selected the right team this time!");
                 return true;
+            } else if(args[0].equalsIgnoreCase("admin")){
+                if(args[1].equalsIgnoreCase("warp-test")){
+                    player.sendMessage(ChatColor.GOLD + "Commencing Warp!");
+                    Pig piggy = (Pig)player.getWorld().spawnEntity(player.getLocation().add(0, 1, 0), EntityType.PIG);
+                    piggy.setPassenger(player);
+                    piggy.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 255, 255));
+                    piggy.setVelocity(new Vector(0, 30, 0));
+                }
             }
         }
         return false;

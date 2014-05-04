@@ -12,12 +12,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.WorldInitEvent;
+
+import java.util.ArrayList;
 
 /**
  * Created by Nicka101 on 01/04/2014.
@@ -30,7 +34,7 @@ public class EventListener implements Listener {
 
     protected EventListener(final ThreeWorlds plugin){
         this.plugin = plugin;
-        new WaterDamageTask(plugin).runTaskTimer(plugin, 1, 1);
+        new WaterCollisionTask(plugin).runTaskTimer(plugin, 1, 1);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -150,6 +154,35 @@ public class EventListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerTeleport(final PlayerTeleportEvent event){
+        plugin.getPlayerManager().GetHandlerForPlayer(event.getPlayer())
+                .processTeleportEvent(event);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerRespawn(final PlayerRespawnEvent event){
+        plugin.getPlayerManager().GetHandlerForPlayer(event.getPlayer())
+                .processRespawnEvent(event);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onWaterFlow(final BlockFromToEvent event){
+        if(event.getBlock().getType() != Material.WATER && event.getBlock().getType() != Material.STATIONARY_WATER)return;
+        ArrayList<Player> playersInRange = getPlayersInRange(event.getToBlock().getLocation(), 2);
+        PlayerManager playerManager = plugin.getPlayerManager();
+        for(Player p : playersInRange){
+            playerManager.GetHandlerForPlayer(p)
+                    .processNearbyWaterMove(p);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerDeath(PlayerDeathEvent event){
+        plugin.getPlayerManager().GetHandlerForPlayer(event.getEntity())
+                .processDeathEvent(event);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void teleportBlockHandler(final PlayerInteractEvent event){
         if(event.getAction() != Action.PHYSICAL)return;
         if((event.getClickedBlock().getType() != Material.IRON_PLATE &&
@@ -193,5 +226,13 @@ public class EventListener implements Listener {
             }
         }
         return chunk.getWorld().getHighestBlockAt((chunk.getX() * 16) + x, (chunk.getZ() * 16) + z);
+    }
+
+    private ArrayList<Player> getPlayersInRange(Location loc, double range){
+        ArrayList<Player> inRange = new ArrayList<>();
+        for(Player p : plugin.getServer().getOnlinePlayers()){
+            if(loc.distance(p.getLocation()) <= range) inRange.add(p);
+        }
+        return inRange;
     }
 }

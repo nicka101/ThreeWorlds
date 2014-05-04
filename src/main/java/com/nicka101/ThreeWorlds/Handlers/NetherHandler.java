@@ -1,12 +1,16 @@
 package com.nicka101.ThreeWorlds.Handlers;
 
 import com.nicka101.ThreeWorlds.ThreeWorlds;
+import com.nicka101.ThreeWorlds.WaterCollisionType;
 import org.bukkit.block.Block;
 import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 /**
  * Created by Nicka101 on 01/04/2014.
@@ -46,7 +50,31 @@ public class NetherHandler extends WorldHandler {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void processMoveEvent(PlayerMoveEvent event){
-        TouchingWater(event.getPlayer());
+        super.processMoveEvent(event);
+        TouchingWater(event.getPlayer(), WaterCollisionType.DAMAGE);
     }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void processTeleportEvent(PlayerTeleportEvent event){
+        super.processTeleportEvent(event);
+        TouchingWater(event.getPlayer(), WaterCollisionType.DAMAGE);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void processRespawnEvent(PlayerRespawnEvent event){
+        super.processRespawnEvent(event);
+        TouchingWater(event.getPlayer(), WaterCollisionType.DAMAGE);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void processNearbyWaterMove(Player p){
+        super.processNearbyWaterMove(p);
+        TouchingWater(p, WaterCollisionType.DAMAGE);
+    }
+
 }

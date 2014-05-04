@@ -1,6 +1,7 @@
 package com.nicka101.ThreeWorlds.Handlers;
 
 import com.nicka101.ThreeWorlds.ThreeWorlds;
+import com.nicka101.ThreeWorlds.WaterCollisionType;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -8,10 +9,14 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +47,34 @@ public class EndHandler extends WorldHandler {
     @Override
     public void processEntityTargetEvent(EntityTargetEvent event){
         if(event.getEntity() instanceof Enderman)event.setCancelled(true);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void processMoveEvent(PlayerMoveEvent event){
+        super.processMoveEvent(event);
+        TouchingWater(event.getPlayer(), WaterCollisionType.ENDER);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void processTeleportEvent(PlayerTeleportEvent event){
+        super.processTeleportEvent(event);
+        TouchingWater(event.getPlayer(), WaterCollisionType.ENDER);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void processRespawnEvent(PlayerRespawnEvent event){
+        super.processRespawnEvent(event);
+        TouchingWater(event.getPlayer(), WaterCollisionType.ENDER);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void processNearbyWaterMove(Player p){
+        super.processNearbyWaterMove(p);
+        TouchingWater(p, WaterCollisionType.ENDER);
     }
 
     @SuppressWarnings("deprecation")
