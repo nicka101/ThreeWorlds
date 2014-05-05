@@ -2,11 +2,12 @@ package com.nicka101.ThreeWorlds.Generation;
 
 import com.nicka101.ThreeWorlds.PlayerManager.WorldType;
 import com.nicka101.ThreeWorlds.ThreeWorlds;
+import com.nicka101.ThreeWorlds.Util.BlockUtil;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.BlockPopulator;
 
@@ -50,30 +51,28 @@ public class OrePopulator extends BlockPopulator {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void generateResourceChunk(Block center, Random random, OreConfigValue value){
-        ArrayList<Block> inCircle = new ArrayList<>();
+        ArrayList<Location> inCircle = new ArrayList<>();
+        boolean physicsAffected = gravityAffected.contains(value.Material);
+        World world = center.getWorld();
         for(int x = center.getX() - 2; x <= center.getX() + 2; x++){
             for(int y = center.getY() - 2; y <= center.getY() + 2; y++){
                 for(int z = center.getZ() - 2; z <= center.getZ(); z++){
                     if(Math.pow(center.getX() - x, 2) + Math.pow(center.getY() - y, 2) + Math.pow(center.getZ() - z, 2) <= 8){
-                        if(center.getWorld().getBlockAt(x, y, z).getType() == replaceable){
-                            inCircle.add(center.getWorld().getBlockAt(x, y, z));
+                        if(BlockUtil.getTypeIdUnsafe(world, x, y, z) == replaceable.getId()){
+                            if(physicsAffected && y > 0 && BlockUtil.isEmptyOrLiquid(world, x, y - 1, z)) continue;
+                            inCircle.add(new Location(world, x, y, z));
                         }
                     }
                 }
             }
         }
-        if(gravityAffected.contains(value.Material)){
-            for(int i = 0; i < inCircle.size(); i++){
-                Block rel = inCircle.get(i).getRelative(BlockFace.DOWN);
-                if(rel.isEmpty() || rel.isLiquid())inCircle.remove(i);
-            }
-        }
         if(inCircle.size() == 0) return;
         int trueCount = value.Size == 1 ? 1 : random.nextInt(value.Size - 1) + 1;
         while(trueCount > 0){
-            Block b = inCircle.get(random.nextInt(inCircle.size()));
-            b.setType(value.Material);
+            Location b = inCircle.get(random.nextInt(inCircle.size()));
+            BlockUtil.setBlockFastUnsafe(world, b.getBlockX(), b.getBlockY(), b.getBlockZ(), value.Material);
             inCircle.remove(b);
             if(inCircle.size() == 0) return;
             trueCount--;

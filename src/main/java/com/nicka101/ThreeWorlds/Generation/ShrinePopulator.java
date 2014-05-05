@@ -2,6 +2,7 @@ package com.nicka101.ThreeWorlds.Generation;
 
 import com.nicka101.ThreeWorlds.PlayerManager;
 import com.nicka101.ThreeWorlds.ThreeWorlds;
+import com.nicka101.ThreeWorlds.Util.BlockUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,19 +41,22 @@ public class ShrinePopulator extends BlockPopulator {
             for(int y = 0; y < world.getMaxHeight() - 1; y++){
                 for(int z = 0; z < 16; z++){
                     double dist = distanceFromCenter(chunkX + x, chunkZ + z);
-                    if(dist > RADIUS-1 && dist <= RADIUS) chunk.getBlock(x, y, z).setType(Material.SMOOTH_BRICK);
+                    if(dist > RADIUS) continue;
+                    int realX = chunkX + x;
+                    int realZ = chunkZ + z;
+                    if(dist > RADIUS-1 && dist <= RADIUS) BlockUtil.setBlockFastUnsafe(world, realX, y, realZ, Material.SMOOTH_BRICK);
                     else if(dist <= RADIUS-1){
-                        if((dist > INNER_RADIUS && y % 11 == 0))genFloor(chunk, x, y, z);
+                        if((dist > INNER_RADIUS && y % 11 == 0))genFloor(world, x, y, z);
                         else if(dist <= INNER_RADIUS) {
-                            if (y % 11 == 1 || y % 11 == 2 || y % 11 == 3) chunk.getBlock(x, y, z).setType(Material.AIR);
+                            if (y % 11 == 1 || y % 11 == 2 || y % 11 == 3) BlockUtil.setBlockFastUnsafe(world, realX, y, realZ, Material.AIR);
                             else if(dist > INNER_RADIUS - 1){
-                                chunk.getBlock(x, y, z).setType(y % 11 == 0 ? Material.SPONGE : Material.GLASS);
+                                BlockUtil.setBlockFastUnsafe(world, realX, y, realZ, y % 11 == 0 ? Material.SPONGE : Material.GLASS);
                             }
-                            else if(y == 0) chunk.getBlock(x, y, z).setType(Material.SPONGE);
-                            else chunk.getBlock(x, y, z).setType(Material.AIR);
+                            else if(y == 0) BlockUtil.setBlockFastUnsafe(world, realX, y, realZ, Material.SPONGE);
+                            else BlockUtil.setBlockFastUnsafe(world, realX, y, realZ, Material.AIR);
                         } else {
-                            Block b = chunk.getBlock(x, y, z);
-                            if(b.getType() != Material.GOLD_PLATE && b.getType() != Material.IRON_PLATE) b.setType(Material.AIR);
+                            if(BlockUtil.getTypeIdUnsafe(world, realX, y, realZ) != Material.GOLD_PLATE.getId() &&
+                                    BlockUtil.getTypeIdUnsafe(world, realX, y, realZ) != Material.IRON_PLATE.getId()) BlockUtil.setBlockFastUnsafe(world, realX, y, realZ, Material.AIR);
                         }
                     }
                 }
@@ -69,18 +73,16 @@ public class ShrinePopulator extends BlockPopulator {
         return distance(x, z, center.getX(), center.getZ());
     }
 
-    private void genFloor(Chunk chunk, int x, int y, int z){
-        int chunkX = (chunk.getX() * 16) + x;
-        int chunkZ = (chunk.getZ() * 16) + z;
-        if((chunkX == center.getBlockX() || chunkZ == center.getBlockZ()) &&
-                (Math.abs(chunkX - center.getBlockX()) == ((RADIUS/2) + (y % 2 == 0 ? 1 : 0)) ||  Math.abs(chunkZ - center.getBlockZ()) == ((RADIUS/2) + (y % 2 == 0 ? 1 : 0)))) {
-            chunk.getBlock(x, y, z).setType(Material.SPONGE);
-            chunk.getBlock(x, y + 1, z).setType(Material.GOLD_PLATE);
-        } else if(distanceFromCenter(chunkX, chunkZ) == RADIUS - 1){
-            chunk.getBlock(x, y, z).setType(Material.SPONGE);
-            chunk.getBlock(x, y + 1, z).setType(Material.IRON_PLATE);
+    private void genFloor(World world, int x, int y, int z){
+        if((x == center.getBlockX() || z == center.getBlockZ()) &&
+                (Math.abs(x - center.getBlockX()) == ((RADIUS/2) + (y % 2 == 0 ? 1 : 0)) ||  Math.abs(z - center.getBlockZ()) == ((RADIUS/2) + (y % 2 == 0 ? 1 : 0)))) {
+            BlockUtil.setBlockFastUnsafe(world, x, y, z, Material.SPONGE);
+            BlockUtil.setBlockFastUnsafe(world, x, y + 1, z, Material.GOLD_PLATE);
+        } else if(distanceFromCenter(x, z) == RADIUS - 1){
+            BlockUtil.setBlockFastUnsafe(world, x, y, z, Material.SPONGE);
+            BlockUtil.setBlockFastUnsafe(world, x, y + 1, z, Material.IRON_PLATE);
         } else {
-            chunk.getBlock(x, y, z).setType(x % 4 == 0 && z % 4 == 0? Material.GLOWSTONE : Material.SMOOTH_BRICK);
+            BlockUtil.setBlockFastUnsafe(world, x, y, z, x % 4 == 0 && z % 4 == 0 ? Material.GLOWSTONE : Material.SMOOTH_BRICK);
         }
     }
 }
