@@ -77,4 +77,9 @@ public class NetherHandler extends WorldHandler {
         TouchingWater(p, WaterCollisionType.DAMAGE);
     }
 
+    @Override
+    public void processGlobalDamageModifiers(EntityDamageByEntityEvent event){
+        event.setDamage(event.getDamage() + 1D);
+    }
+
 }

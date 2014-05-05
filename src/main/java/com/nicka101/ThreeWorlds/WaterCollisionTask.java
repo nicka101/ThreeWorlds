@@ -3,6 +3,7 @@ package com.nicka101.ThreeWorlds;
 import com.nicka101.ThreeWorlds.Events.EntityDamageByWaterEvent;
 import com.nicka101.ThreeWorlds.Handlers.WorldHandler;
 import net.minecraft.server.v1_7_R3.AxisAlignedBB;
+import net.minecraft.server.v1_7_R3.DamageSource;
 import net.minecraft.server.v1_7_R3.EntityPlayer;
 import net.minecraft.server.v1_7_R3.MathHelper;
 import org.bukkit.GameMode;
@@ -51,7 +52,7 @@ public class WaterCollisionTask extends BukkitRunnable {
             } catch (IndexOutOfBoundsException e){
                 damageTicks = 0;
             }
-            if(damageTicks % 20 != 0){
+            if(damageTicks % 10 != 0){
                 updateTicks(p, ++damageTicks);
                 continue;
             }
@@ -82,7 +83,9 @@ public class WaterCollisionTask extends BukkitRunnable {
         plugin.getServer().getPluginManager().callEvent(event);
         if(event.isCancelled())return;
         player.setLastDamageCause(event);
-        player.damage(event.getDamage());
+        //player.damage(event.getDamage());
+        //Damage as though lava so it is affected by the same mechanics
+        ((CraftPlayer)player).getHandle().damageEntity(DamageSource.LAVA, (float) event.getDamage());
     }
 
     //CraftBukkit Enderman teleport code modified for use on a player in a plugin

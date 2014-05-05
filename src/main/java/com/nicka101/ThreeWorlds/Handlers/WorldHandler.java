@@ -99,6 +99,10 @@ public class WorldHandler {
         }
     }
 
+    public void processGlobalDamageModifiers(EntityDamageByEntityEvent event){
+        //Do Nothing
+    }
+
     protected void sendResourcePack(World.Environment environment, Player player){
         if(getResourcePackUrl(environment) != null){
             new ResourcePackSender(player, getResourcePackUrl(environment)).runTask(plugin);

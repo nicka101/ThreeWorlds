@@ -8,21 +8,28 @@ options:
       tree: 200
       ores:
         #Rate is out of 50k and is chance to spawn a chunk
-        rate:
-          coal: 20
-          iron: 8
-          gold: 4
-          redstone: 9
-          lapis: 3
-          diamond: 1
-        #Size of chunk
-        size:
-          coal: 6
-          iron: 4
-          gold: 7
-          redstone: 6
-          lapis: 3
-          diamond: 4
+        #Size is the maximum size of the chunk
+        SAND:
+          rate: 40
+          size: 20
+        COAL_ORE:
+          rate: 20
+          size: 6
+        IRON_ORE:
+          rate: 8
+          size: 4
+        GOLD_ORE:
+          rate: 4
+          size: 7
+        REDSTONE_ORE:
+          rate: 9
+          size: 6
+        LAPIS_ORE:
+          rate: 3
+          size: 3
+        DIAMOND_ORE:
+          rate: 1
+          size: 4
   end:
     health: 40
     teleport:
@@ -42,21 +49,31 @@ options:
       invert_threshold: false
       ores:
         #Rate is out of 50k and is chance to spawn a chunk
-        rate:
-          coal: 20
-          iron: 5
-          gold: 4
-          redstone: 9
-          lapis: 3
-          diamond: 2
-        #Size of chunk
-        size:
-          coal: 6
-          iron: 5
-          gold: 4
-          redstone: 6
-          lapis: 3
-          diamond: 4
+        #Size is the maximum size of the chunk
+        SAND:
+          rate: 40
+          size: 20
+        GRAVEL:
+          rate: 50
+          size: 15
+        COAL_ORE:
+          rate: 20
+          size: 6
+        IRON_ORE:
+          rate: 5
+          size: 5
+        GOLD_ORE:
+          rate: 4
+          size: 4
+        REDSTONE_ORE:
+          rate: 9
+          size: 6
+        LAPIS_ORE:
+          rate: 3
+          size: 3
+        DIAMOND_ORE:
+          rate: 2
+          size: 4
 players:
   overworld: []
   nether: []

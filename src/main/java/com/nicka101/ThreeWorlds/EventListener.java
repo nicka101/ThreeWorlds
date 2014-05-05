@@ -51,6 +51,7 @@ public class EventListener implements Listener {
     public void onEntityDamageByEntity(final EntityDamageByEntityEvent event){
         if(!(event.getEntity() instanceof Player || event.getDamager() instanceof Player))return;
         PlayerManager playerManager = plugin.getPlayerManager();
+        if(event.getDamager() instanceof Player) playerManager.GetHandlerForPlayer((Player)event.getDamager()).processGlobalDamageModifiers(event);
         if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
             return;//PvP handled by teams
         }
