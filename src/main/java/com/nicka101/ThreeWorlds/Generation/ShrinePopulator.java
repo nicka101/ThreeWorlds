@@ -46,7 +46,7 @@ public class ShrinePopulator extends BlockPopulator {
                     int realZ = chunkZ + z;
                     if(dist > RADIUS-1 && dist <= RADIUS) BlockUtil.setBlockFastUnsafe(world, realX, y, realZ, Material.SMOOTH_BRICK);
                     else if(dist <= RADIUS-1){
-                        if((dist > INNER_RADIUS && y % 11 == 0))genFloor(world, x, y, z);
+                        if((dist > INNER_RADIUS && y % 11 == 0))genFloor(world, realX, y, realZ);
                         else if(dist <= INNER_RADIUS) {
                             if (y % 11 == 1 || y % 11 == 2 || y % 11 == 3) BlockUtil.setBlockFastUnsafe(world, realX, y, realZ, Material.AIR);
                             else if(dist > INNER_RADIUS - 1){
@@ -70,7 +70,7 @@ public class ShrinePopulator extends BlockPopulator {
     }
 
     private double distanceFromCenter(int x, int z){
-        return distance(x, z, center.getX(), center.getZ());
+        return distance(x, z, center.getBlockX(), center.getBlockZ());
     }
 
     private void genFloor(World world, int x, int y, int z){
@@ -82,7 +82,8 @@ public class ShrinePopulator extends BlockPopulator {
             BlockUtil.setBlockFastUnsafe(world, x, y, z, Material.SPONGE);
             BlockUtil.setBlockFastUnsafe(world, x, y + 1, z, Material.IRON_PLATE);
         } else {
-            BlockUtil.setBlockFastUnsafe(world, x, y, z, x % 4 == 0 && z % 4 == 0 ? Material.GLOWSTONE : Material.SMOOTH_BRICK);
+            if(x % 4 == 0 && z % 4 == 0) world.getBlockAt(x, y, z).setType(Material.GLOWSTONE); //Don't use BlockUtil here as we want to cause a lighting update
+            else BlockUtil.setBlockFastUnsafe(world, x, y, z, Material.SMOOTH_BRICK);
         }
     }
 }
