@@ -63,6 +63,9 @@ public class WaterCollisionTask extends BukkitRunnable {
                 case ENDER:
                     if(k(p)){
                         damageByWater(p, source, 1);
+                        p.removeMetadata("waterCollisionBlock", plugin);
+                        p.removeMetadata("waterCollisionTicks", plugin);
+                        p.removeMetadata("waterCollisionType", plugin);
                     } else {
                         damageByWater(p, source, 5);
                     }

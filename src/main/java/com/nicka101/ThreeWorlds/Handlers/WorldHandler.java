@@ -112,7 +112,7 @@ public class WorldHandler {
     @Deprecated
     @SuppressWarnings("deprecation")
     protected void TouchingWater(Player p, WaterCollisionType waterCollisionType){
-        if(p.isDead())return;
+        if(p.isDead() || p.getGameMode() == GameMode.CREATIVE) return;
         Block b =  AABBIntersectsWater(p.getWorld(), ((CraftPlayer)p).getHandle().boundingBox);
         if(b == null && p.hasMetadata("waterCollisionBlock")){
             p.removeMetadata("waterCollisionBlock", plugin);
